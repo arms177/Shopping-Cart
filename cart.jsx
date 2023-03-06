@@ -104,7 +104,7 @@ const Products = (props) => {
       const tempProducts = [];
       data.forEach(item => {
         tempProducts.push({'name':item.attributes.name, 'country':item.attributes.country,
-          'cost':item.attributes.cost, 'instock':item.attributes.instock})
+          'cost':item.attributes.cost, 'instock':item.attributes.instock, 'hasRestocked': true})
       });
       setItems(tempProducts);
     }
@@ -125,10 +125,15 @@ const Products = (props) => {
     let n = index + 1049;
     let url = "https://picsum.photos/id/" + n + "/50/50";
     let canAdd = true;
-    if (cart.some(ind => ind.name === item.name)) item.instock--;
+
+    if (!item.hasRestocked) {
+      if (cart.some(ind => ind.name === item.name)) item.instock--;
+    } else {
+      item.hasRestocked = false;
+    }
 
     if (item.instock <= 0) canAdd = false;
-
+    
     return (
       <li key={index}>
         <Image src={url} width={70} roundedCircle></Image>
